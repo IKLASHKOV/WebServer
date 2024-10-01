@@ -1,0 +1,11 @@
+1) Запускаем базу одновременно создавая базу и пользователя
+sudo docker run --name postgres-container \
+-e POSTGRES_PASSWORD=sirius25 \
+-e POSTGRES_USER=myuser \
+-e POSTGRES_DB=mydatabase \
+-p 5432:5432 \
+-d postgres:latest
+2) Запускаем исполняемый файл main.py для парсинга данных из файла csv и загрузки данных в базу
+3) Запускаем сервер app.py переходим по ссылке http://127.0.0.1:5000
+
+

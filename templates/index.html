@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Производители и модели</title>
+    <script src="static/script.js" defer></script>
+</head>
+<body>
+    <h1>Выберите производителя</h1>
+    <select id="manufacturerSelect">
+        <option value="">--Выберите производителя--</option>
+        {% for manufacturer in manufacturers %}
+            <option value="{{ manufacturer.id }}">{{ manufacturer.name }}</option>
+        {% endfor %}
+    </select>
+
+    <h2>Модели:</h2>
+    <ul id="modelList"></ul>
+</body>
+</html>
