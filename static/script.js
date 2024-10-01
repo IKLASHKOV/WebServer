@@ -9,7 +9,7 @@ document.getElementById('manufacturerSelect').addEventListener('change', functio
             .then(data => {
                 data.forEach(model => {
                     const li = document.createElement('li');
-                    li.textContent = `${model.code} - ${model.description}`;
+                    li.textContent = `${model.description}`;
                     modelList.appendChild(li);
                 });
             })

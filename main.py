@@ -1,45 +1,33 @@
 import pandas as pd
-from db_class import AircraftModels, Manufacturer
-from db_manager import Session
+from db_manager import Session, AircraftModels, Manufacturer
 
 
 def fill_table(document):
     with Session() as session:
-        for index, row in document.iterrows():
+        for _, row in document.iterrows():
+            manufacturer_code = row['manufacturercode'].strip()
             try:
-                manufacturer_code = row['manufacturercode'].strip()
-                manufacturer = session.query(Manufacturer).filter_by(name=manufacturer_code).first()
-                if manufacturer is None:
-                    manufacturer = Manufacturer(name=manufacturer_code)
-                    session.add(manufacturer)
-                    session.commit()
-                    print(f"Добавлен производитель: {manufacturer_code}")
-                else:
-                    print(f"Производитель уже существует: {manufacturer_code}")
+                manufacturer = Manufacturer(name=manufacturer_code)
+                session.add(manufacturer)
+                session.commit()
+                print(f"Добавлен производитель: {manufacturer_code}")
+            except:
+                session.rollback()
+                print(f"Производитель уже существует: {manufacturer_code}")
 
-                existing_model = session.query(AircraftModels).filter_by(
-                    model_code=row['designator'].strip(),
+            manufacturer_id = session.query(Manufacturer.id).filter_by(name=manufacturer_code).scalar()
+            try:
+                model = AircraftModels(
                     model_description=row['modelfullname'].strip(),
-                    manufacturer_id=manufacturer.id
-                ).first()
-
-                if existing_model is None:
-                    model = AircraftModels(
-                        model_code=row['designator'].strip(),
-                        model_description=row['modelfullname'].strip(),
-                        manufacturer_id=manufacturer.id
-                    )
-                    session.add(model)
-                    print(f"Добавлена модель: {model.model_code} - {model.model_description}")
-                else:
-                    print(f"Модель уже существует: {existing_model.model_code} - {existing_model.model_description}")
-
-            except Exception as e:
-                print(f"Ошибка при добавлении данных для строки {index}: {e}")
-
-    session.commit()
-
-print("Данные успешно загружены в базу данных")
+                    manufacturer_id=manufacturer_id
+                )
+                session.add(model)
+                session.commit()
+                print(f"Добавлена модель: {model.model_description}")
+            except:
+                session.rollback()
+                print(f"Модель уже существует: {model.model_description}")
+    print("Данные успешно загружены в базу данных")
 
 
 if __name__ == "__main__":
